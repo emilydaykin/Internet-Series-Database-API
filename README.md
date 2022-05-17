@@ -1,5 +1,7 @@
 # Local Series Database (LSDb)
-LSDb is a full stack MERN (MongoDB, Express, React & Node) web and mobile application that allows users to browse TV series, leave comments and reviews and add them to their 'favourites' list. This project started off as a GA assignment, but has since expanded to include extra features, functionality and designs.
+LSDb is a full stack MERN (MongoDB, Express, React & Node) web and mobile application that allows users to browse TV series, leave comments and reviews and add them to their 'favourites' list.
+
+**This repo contains code for the back end api only; code for the front end client lives [here](https://github.com/emilydaykin/Internet-Series-Database-Client).**
 
 # Tech Stack
 - Front End: React SPA, SCSS
