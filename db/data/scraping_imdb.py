@@ -50,10 +50,6 @@ def extract_years(years):
     finale_year = 'ongoing' if len(years_split) == 1 else years_split[1]
     return pilot_year, finale_year
 
-# def extract_html_element(tag, class_name):
-#     return soup.find_all(tag, class_=class_name)
-
-blacklist_URL = 'https://www.imdb.com/title/tt2741602/?ref_=fn_al_tt_1'
 
 all_series = []
 
