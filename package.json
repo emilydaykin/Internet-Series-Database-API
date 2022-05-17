@@ -1,11 +1,12 @@
 {
-  "name": "restful-api-lab",
+  "name": "restful-api-project",
   "version": "1.0.0",
   "description": "my very own TV series API!",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start:server": "npx nodemon server.js"
+    "start:server": "npx nodemon server.js",
+    "seed": "node --experimental-json-modules db/seed.js"
   },
   "type": "module",
   "author": "",
