@@ -1,6 +1,5 @@
 import express from 'express';
 import seriesController from '../controllers/seriesController.js';
-import actorsController from '../controllers/actorsController.js';
 import usersController from '../controllers/usersController.js';
 import commentsController from '../controllers/commentsController.js';
 import secureRoute from '../middleware/secureRoute.js';
@@ -30,14 +29,6 @@ router
   .delete(secureRoute, commentsController.deleteComment);
 
 router.route('/series/:name').delete(seriesController.deleteSeries);
-
-router
-  .route('/actors')
-  .get(actorsController.getAllActors)
-  .post(secureRoute, actorsController.createActor); // admin only
-
-router.route('/actors/:id').get(actorsController.getAllSeriesForActor);
-// router.route('/actors/:name').get(actorsController.getAllSeriesForActor);
 
 router
   .route('/users')

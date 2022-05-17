@@ -1,5 +1,4 @@
 import Series from '../models/series.js';
-import Actor from '../models/series.js';
 
 // (GET) HOME
 const getHomePage = async (req, res, next) => {
@@ -105,8 +104,6 @@ const deleteSeries = async (req, res, next) => {
       const series = await Series.findById(req.params.id);
       // Delete the movie:
       await Series.findByIdAndRemove(req.params.id);
-      // Remove this movie from all actors:
-      await Actor.updateMany({ _id: series.actors }, { $pull: { series: series._id } });
       return res.status(200).json({ message: 'Series successfully deleted', body: series });
     } catch (err) {
       next(err);
