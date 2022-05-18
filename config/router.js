@@ -14,7 +14,7 @@ router
   .get(seriesController.getAllSeries)
   .post(secureRoute, seriesController.createSeries); // admin only
 
-router.route('/series/:search').get(seriesController.getSeriesById);
+router.route('/series/:search').get(seriesController.getSeriesBySearchTerm);
 
 router
   .route('/series/:id')

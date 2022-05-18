@@ -17,7 +17,7 @@ const getAllSeries = async (req, res, next) => {
 };
 
 // (GET) SERIES by ID
-const getSeriesById = async (req, res, next) => {
+const getSeriesBySearchTerm = async (req, res, next) => {
   try {
     console.log('params', req.params);
     const allSeries = await Series.find();
@@ -133,7 +133,7 @@ const deleteSeries = async (req, res, next) => {
 export default {
   getHomePage,
   getAllSeries,
-  getSeriesById,
+  getSeriesBySearchTerm,
   createSeries,
   updateSeries,
   deleteSeries
