@@ -16,6 +16,8 @@ router
 
 router.route('/series/:search').get(seriesController.getSeriesBySearchTerm);
 
+router.route('/series/genre/:search').get(seriesController.filterSeriesByGenre);
+
 router
   .route('/series/:id')
   .put(secureRoute, seriesController.updateSeries) // admin only

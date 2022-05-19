@@ -1,3 +1,4 @@
+import series from '../models/series.js';
 import Series from '../models/series.js';
 
 // (GET) HOME
@@ -16,7 +17,7 @@ const getAllSeries = async (req, res, next) => {
   }
 };
 
-// (GET) SERIES by ID
+// (GET) SERIES by search term
 const getSeriesBySearchTerm = async (req, res, next) => {
   try {
     console.log('params', req.params);
@@ -58,6 +59,26 @@ const getSeriesBySearchTerm = async (req, res, next) => {
       } else {
         return res.status(400).json({ message: 'Series not found' });
       }
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+// (GET) filter series by genre (only)
+const filterSeriesByGenre = async (req, res, next) => {
+  try {
+    console.log('params', req.params);
+    const allSeries = await Series.find();
+    const seriesByGenre = allSeries.filter((show) =>
+      // has to be an exact match
+      show.genre.find((showGenre) => showGenre.toLowerCase() === req.params.search)
+    );
+
+    if (seriesByGenre.length !== 0) {
+      return res.status(200).json(seriesByGenre);
+    } else {
+      return res.status(400).json({ message: `No series with a ${req.params.search} genre` });
     }
   } catch (err) {
     next(err);
@@ -134,6 +155,7 @@ export default {
   getHomePage,
   getAllSeries,
   getSeriesBySearchTerm,
+  filterSeriesByGenre,
   createSeries,
   updateSeries,
   deleteSeries
