@@ -16,7 +16,7 @@ router
 
 router.route('/series/:search').get(seriesController.getSeriesBySearchTerm);
 
-router.route('/series/genre/search').get(seriesController.filterSeriesByGenre);
+router.route('/series/genre/search').post(seriesController.filterSeriesByGenre);
 
 router
   .route('/series/:id')

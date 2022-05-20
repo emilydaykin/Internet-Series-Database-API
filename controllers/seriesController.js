@@ -68,21 +68,17 @@ const getSeriesBySearchTerm = async (req, res, next) => {
 // (GET) filter series by genre (only)
 const filterSeriesByGenre = async (req, res, next) => {
   try {
-    console.log('params', req.body.genres);
+    console.log('params', req.body);
     const allSeries = await Series.find();
-    const seriesByGenre = allSeries.filter((show) => {
-      const intersection = show.genre.filter((showGenre) =>
-        req.body.genres.includes(showGenre.toLowerCase())
-      );
-      return intersection.length === req.body.genres.length;
-    });
 
-    if (seriesByGenre.length !== 0) {
+    if (req.body.genres) {
+      const seriesByGenre = allSeries.filter((show) => {
+        const intersection = show.genre.filter((showGenre) =>
+          req.body.genres.includes(showGenre.toLowerCase())
+        );
+        return intersection.length === req.body.genres.length;
+      });
       return res.status(200).json(seriesByGenre);
-    } else {
-      return res
-        .status(400)
-        .json({ message: `No series matching a genre list of [${req.body.genres}]` });
     }
   } catch (err) {
     next(err);
