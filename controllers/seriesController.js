@@ -71,24 +71,18 @@ const filterSeriesByGenre = async (req, res, next) => {
     console.log('params', req.body.genres);
     const allSeries = await Series.find();
     const seriesByGenre = allSeries.filter((show) => {
-      const intersection = show.genre.filter((showGenre) => {
-        console.log(`all genres of ${show.name}: ${showGenre}`);
-        return req.body.genres.includes(showGenre.toLowerCase());
-      });
-      console.log('intersection', intersection);
-      // if (intersection.length === req.body.genres.length) {
-      //   console.log(`---------------- ^ YES (${show.name}) ----------------`);
-      // } else {
-      //   console.log(`No (${show.name})`);
-      // }
+      const intersection = show.genre.filter((showGenre) =>
+        req.body.genres.includes(showGenre.toLowerCase())
+      );
       return intersection.length === req.body.genres.length;
     });
-    console.log('TOTAL seriesByGenre found:', seriesByGenre.length);
 
     if (seriesByGenre.length !== 0) {
       return res.status(200).json(seriesByGenre);
     } else {
-      return res.status(400).json({ message: `No series with a ${req.params.search} genre` });
+      return res
+        .status(400)
+        .json({ message: `No series matching a genre list of [${req.body.genres}]` });
     }
   } catch (err) {
     next(err);
