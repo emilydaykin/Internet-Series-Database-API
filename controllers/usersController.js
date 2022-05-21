@@ -46,7 +46,7 @@ const loginUser = async (req, res, next) => {
       if (!isValidPw) {
         return res.status(404).json({ status: 'failure', message: 'Unauthorised' });
       } else {
-        const payload = { userId: user._id, isAdmin: user.isAdmin };
+        const payload = { userId: user._id, userName: user.username, isAdmin: user.isAdmin };
         console.log({ payload });
         const token = jwt.sign(
           payload, // payload from the token decrpyted
