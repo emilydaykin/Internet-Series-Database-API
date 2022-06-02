@@ -17,20 +17,56 @@ const getAllUsers = async (req, res, next) => {
 
 // Create new user
 const registerUser = async (req, res, next) => {
+  // console.log('req.body', req.body);
   try {
-    // console.log('req.body', req.body);
-    if (req.body.password === req.body.passwordConfirmation) {
+    if (req.body.passwordConfirmation === '') {
+      return res.status(400).json({
+        status: 'failure',
+        message: 'Please confirm your password.'
+      });
+    } else if (req.body.password === req.body.passwordConfirmation) {
       delete req.body.passwordConfirmation;
-      // console.log('req.body after delete', req.body);
       const newUser = await User.create(req.body);
       return res.status(201).json(newUser);
     } else {
-      res.status(400).json({
+      return res.status(400).json({
         status: 'failure',
-        message: "Passwords don't match, or you haven't provided a password confirmation"
+        message: "Passwords don't match."
       });
     }
   } catch (err) {
+    if (err.message.includes('User validation failed: password: Password')) {
+      const errorMessage = err.message.split('password: ')[1];
+      console.log('------errorMessage:', errorMessage);
+      res.status(400).json({
+        status: 'failure',
+        message: errorMessage
+      });
+      console.log('------ password error message:', err.message);
+      console.log('------');
+    }
+
+    if (err.message.includes('email: Email address invalid')) {
+      res.status(400).json({
+        status: 'failure',
+        message: 'Email invalid'
+      });
+    }
+
+    if (err.message.includes('email: Error, expected `email` to be unique')) {
+      res.status(400).json({
+        status: 'failure',
+        message: 'Email already registered'
+      });
+    }
+
+    if (err.message.includes('Error, expected `username` to be unique')) {
+      res.status(400).json({
+        status: 'failure',
+        message: 'Username taken'
+      });
+    }
+
     next(err);
   }
 };
