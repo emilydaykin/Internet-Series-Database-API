@@ -19,12 +19,7 @@ const getAllUsers = async (req, res, next) => {
 const registerUser = async (req, res, next) => {
   // console.log('req.body', req.body);
   try {
-    if (req.body.passwordConfirmation === '') {
-      return res.status(400).json({
-        status: 'failure',
-        message: 'Please confirm your password.'
-      });
-    } else if (req.body.password === req.body.passwordConfirmation) {
+    if (req.body.password === req.body.passwordConfirmation) {
       delete req.body.passwordConfirmation;
       const newUser = await User.create(req.body);
       return res.status(201).json(newUser);
