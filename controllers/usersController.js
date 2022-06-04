@@ -33,32 +33,30 @@ const registerUser = async (req, res, next) => {
     if (err.message.includes('User validation failed: password: Password')) {
       const errorMessage = err.message.split('password: ')[1];
       console.log('------errorMessage:', errorMessage);
-      res.status(400).json({
+      return res.status(400).json({
         status: 'failure',
         message: errorMessage
       });
-      console.log('------ password error message:', err.message);
-      console.log('------');
     }
 
     if (err.message.includes('email: Email address invalid')) {
-      res.status(400).json({
+      return res.status(400).json({
         status: 'failure',
         message: 'Email invalid'
       });
     }
 
-    if (err.message.includes('email: Error, expected `email` to be unique')) {
-      res.status(400).json({
+    if (err.message.includes('Error, expected `username` to be unique')) {
+      return res.status(400).json({
         status: 'failure',
-        message: 'Email already registered'
+        message: 'Username taken'
       });
     }
 
-    if (err.message.includes('Error, expected `username` to be unique')) {
-      res.status(400).json({
+    if (err.message.includes('email: Error, expected `email` to be unique')) {
+      return res.status(400).json({
         status: 'failure',
-        message: 'Username taken'
+        message: 'Email already registered'
       });
     }
 
