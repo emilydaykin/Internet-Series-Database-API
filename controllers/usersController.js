@@ -42,21 +42,21 @@ const registerUser = async (req, res, next) => {
     if (err.message.includes('email: Email address invalid')) {
       return res.status(400).json({
         status: 'failure',
-        message: 'Email invalid'
+        message: 'Email address invalid.'
       });
     }
 
     if (err.message.includes('Error, expected `username` to be unique')) {
       return res.status(400).json({
         status: 'failure',
-        message: 'Username taken'
+        message: 'Username already taken.'
       });
     }
 
     if (err.message.includes('email: Error, expected `email` to be unique')) {
       return res.status(400).json({
         status: 'failure',
-        message: 'Email already registered'
+        message: 'Email address already registered.'
       });
     }
 
