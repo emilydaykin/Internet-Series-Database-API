@@ -93,7 +93,6 @@ const createSeries = async (req, res, next) => {
 const updateSeries = async (req, res, next) => {
   if (req.currentUser.isAdmin) {
     try {
-      // const updatedSeries = await Series.findByIdAndUpdate(req.params.id, req.body);
       const updatedSeries = await Series.findById(req.params.id);
       updatedSeries.set(req.body);
       const savedSeries = await updatedSeries.save();
