@@ -1,6 +1,7 @@
 import User from '../models/user.js';
 import jwt from 'jsonwebtoken';
 import { secret } from '../config/environment.js';
+import Series from '../models/series.js';
 
 const getAllUsers = async (req, res, next) => {
   if (req.currentUser.isAdmin) {
@@ -91,4 +92,37 @@ const loginUser = async (req, res, next) => {
   }
 };
 
-export default { getAllUsers, registerUser, loginUser };
+const addUserFavourites = async (req, res, next) => {
+  try {
+    console.log('req.body.seriesId', req.body.seriesId);
+    console.log('req.params', req.params);
+    // Get user via token
+    if (!req.currentUser) {
+      res
+        .status(400)
+        .json({ message: "Unauthorised. You must be logged in to 'favourite' a series" });
+    } else {
+      // Get series (that they clicked on):
+      console.log('req.currentUser------:', req.currentUser);
+      const series = await Series.findById(req.body.seriesId);
+      console.log('series clicked on', series.name);
+      const userFavouritedAlready = !!req.currentUser.favouriteSeries.find(
+        (item) => item._id.toString() === req.body.seriesId
+      );
+      console.log('userFavouritedAlready:', userFavouritedAlready);
+      if (userFavouritedAlready) {
+        // remove from favourites list if already in list
+        await User.updateOne({ _id: req.currentUser._id }, { $pull: { favouriteSeries: series } });
+      } else {
+        // add to favourites list if not in there
+        await User.updateOne({ _id: req.currentUser._id }, { $push: { favouriteSeries: series } });
+      }
+      const updatedUser = await User.findById(req.currentUser._id);
+      res.status(200).json(updatedUser);
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+export default { getAllUsers, registerUser, loginUser, addUserFavourites };
