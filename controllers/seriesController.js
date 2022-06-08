@@ -19,7 +19,7 @@ const getAllSeries = async (req, res, next) => {
 // (GET) SERIES by search term
 const getSeriesBySearchTerm = async (req, res, next) => {
   try {
-    console.log('params', req.params);
+    // console.log('params', req.params);
     const allSeries = await Series.find();
     const seriesById = allSeries.find((show) => show.id === req.params.search);
 
@@ -57,7 +57,7 @@ const getSeriesBySearchTerm = async (req, res, next) => {
 // (GET) filter series by genre (only)
 const filterSeriesByGenre = async (req, res, next) => {
   try {
-    console.log('params', req.body);
+    // console.log('params', req.body);
     const allSeries = await Series.find();
 
     if (req.body.genres) {
