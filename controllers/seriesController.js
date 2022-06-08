@@ -1,4 +1,3 @@
-import series from '../models/series.js';
 import Series from '../models/series.js';
 
 // (GET) HOME
@@ -38,11 +37,12 @@ const getSeriesBySearchTerm = async (req, res, next) => {
       );
 
       console.log('seriesByYearOrRating', seriesByYearOrRating);
-      if (seriesByYearOrRating.length !== 0) {
-        return res.status(200).json(seriesByYearOrRating);
-      } else {
-        return res.status(400).json({ message: 'Series not found' });
-      }
+      return res.status(200).json(seriesByYearOrRating);
+      // if (seriesByYearOrRating.length !== 0) {
+      //   return res.status(200).json(seriesByYearOrRating);
+      // } else {
+      //   return res.status(400).json({ message: 'Series not found' });
+      // }
     } else {
       const searchTermLowerCase = req.params.search.toLowerCase();
       // console.log('searchTermLowerCase', searchTermLowerCase);
@@ -54,11 +54,12 @@ const getSeriesBySearchTerm = async (req, res, next) => {
           show.actors.find((actor) => actor.toLowerCase().includes(searchTermLowerCase))
       );
 
-      if (seriesByNameOrDescriptionOrGenreOrActor.length !== 0) {
-        return res.status(200).json(seriesByNameOrDescriptionOrGenreOrActor);
-      } else {
-        return res.status(400).json({ message: 'Series not found' });
-      }
+      return res.status(200).json(seriesByNameOrDescriptionOrGenreOrActor);
+      // if (seriesByNameOrDescriptionOrGenreOrActor.length !== 0) {
+      //   return res.status(200).json(seriesByNameOrDescriptionOrGenreOrActor);
+      // } else {
+      //   return res.status(400).json({ message: 'Series not found' });
+      // }
     }
   } catch (err) {
     next(err);
