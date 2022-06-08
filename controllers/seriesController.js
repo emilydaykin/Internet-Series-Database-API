@@ -22,7 +22,6 @@ const getSeriesBySearchTerm = async (req, res, next) => {
     console.log('params', req.params);
     const allSeries = await Series.find();
     const seriesById = allSeries.find((show) => show.id === req.params.search);
-    // console.log('seriesById', seriesById);
 
     if (seriesById) {
       return res.status(200).json(seriesById);
@@ -38,14 +37,8 @@ const getSeriesBySearchTerm = async (req, res, next) => {
 
       console.log('seriesByYearOrRating', seriesByYearOrRating);
       return res.status(200).json(seriesByYearOrRating);
-      // if (seriesByYearOrRating.length !== 0) {
-      //   return res.status(200).json(seriesByYearOrRating);
-      // } else {
-      //   return res.status(400).json({ message: 'Series not found' });
-      // }
     } else {
       const searchTermLowerCase = req.params.search.toLowerCase();
-      // console.log('searchTermLowerCase', searchTermLowerCase);
       const seriesByNameOrDescriptionOrGenreOrActor = allSeries.filter(
         (show) =>
           show.name.toLowerCase().includes(searchTermLowerCase) ||
@@ -55,11 +48,6 @@ const getSeriesBySearchTerm = async (req, res, next) => {
       );
 
       return res.status(200).json(seriesByNameOrDescriptionOrGenreOrActor);
-      // if (seriesByNameOrDescriptionOrGenreOrActor.length !== 0) {
-      //   return res.status(200).json(seriesByNameOrDescriptionOrGenreOrActor);
-      // } else {
-      //   return res.status(400).json({ message: 'Series not found' });
-      // }
     }
   } catch (err) {
     next(err);
