@@ -31,7 +31,8 @@ const userSchema = new mongoose.Schema({
       'Password must contain at least one lower case letter, one upper case letter, one number and one special character'
     ]
   },
-  isAdmin: { type: Boolean }
+  isAdmin: { type: Boolean },
+  favouriteSeries: { type: Array }
 });
 
 // This function will get called just before a document
