@@ -35,7 +35,8 @@ router.route('/series/:name').delete(seriesController.deleteSeries);
 router
   .route('/users')
   .get(secureRoute, usersController.getAllUsers) // admin only
-  .post(usersController.registerUser);
+  .post(usersController.registerUser)
+  .put(secureRoute, usersController.addUserFavourites); // logged in users only
 
 router.route('/login').post(usersController.loginUser);
 
