@@ -4,7 +4,8 @@ const commentSchema = new mongoose.Schema(
   {
     text: { type: String, required: true, maxLength: 300 },
     rating: { type: Number, required: true, min: 1, max: 5 },
-    createdBy: { type: mongoose.Schema.ObjectId, ref: 'User', required: true }
+    createdById: { type: mongoose.Schema.ObjectId, ref: 'User', required: true },
+    createdByName: { type: String }
   },
   { timestamps: true }
 );
