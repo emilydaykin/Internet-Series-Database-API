@@ -12,6 +12,9 @@ const createUser = (username, email, password, isAdmin = false) => {
 
 const users = [
   createUser('normal_user', 'normal@user.com', 'Password1!@'),
+  createUser('sierra', 'sierra@user.com', 'Password1!@'),
+  createUser('alec', 'alec@user.com', 'Password1!@'),
+  createUser('fabiane', 'fabiane@user.com', 'Password1!@'),
   createUser('admin', 'admin@user.com', 'Password1!@', true)
 ];
 
