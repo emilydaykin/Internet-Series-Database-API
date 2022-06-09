@@ -79,8 +79,8 @@ const loginUser = async (req, res, next) => {
         const payload = {
           userId: user._id,
           userName: user.username,
-          isAdmin: user.isAdmin,
-          faves: user.favouriteSeries
+          isAdmin: user.isAdmin
+          // faves: user.favouriteSeries
         };
         console.log({ payload });
         const token = jwt.sign(
@@ -130,4 +130,30 @@ const addUserFavourites = async (req, res, next) => {
   }
 };
 
-export default { getAllUsers, registerUser, loginUser, addUserFavourites };
+const getUserFavourites = async (req, res, next) => {
+  try {
+    console.log('req.params', req.params);
+    console.log('req.currentUser._id', req.currentUser._id.toString());
+    // console.log('req.currentUser', req.currentUser);
+    if (req.params.id === req.currentUser._id.toString() || req.currentUser.isAdmin) {
+      const user = await User.findById(req.params.id);
+      if (!user) {
+        res
+          .status(400)
+          .json({ status: 'failure', message: `No user found with if ${req.params.id}` });
+      } else {
+        // console.log('user', user);
+        res.status(200).json(user.favouriteSeries);
+      }
+    } else {
+      res.status(401).json({
+        message:
+          "Unauthorised. You can't access another user's Favourites list unless you're an Admin."
+      });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+export default { getAllUsers, registerUser, loginUser, addUserFavourites, getUserFavourites };
