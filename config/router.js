@@ -3,7 +3,6 @@ import seriesController from '../controllers/seriesController.js';
 import usersController from '../controllers/usersController.js';
 import commentsController from '../controllers/commentsController.js';
 import secureRoute from '../middleware/secureRoute.js';
-import user from '../models/user.js';
 
 const router = express.Router();
 
@@ -37,6 +36,8 @@ router
   .get(secureRoute, usersController.getAllUsers) // admin only
   .post(usersController.registerUser)
   .put(secureRoute, usersController.addUserFavourites); // logged in users only
+
+router.route('/users/:id').get(secureRoute, usersController.getUserFavourites); // the same logged in user or admin only
 
 router.route('/login').post(usersController.loginUser);
 

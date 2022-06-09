@@ -15,7 +15,7 @@ const secureRoute = async (req, res, next) => {
         if (err) {
           return res.status(400).send({ message: 'Unauthorised. Token not verified.' });
         } else {
-          console.log('data', data);
+          // console.log('data', data);
           const user = await User.findById(data.userId);
           if (!user) {
             return res.status(400).send({ message: 'Unauthorised. No user found.' });
