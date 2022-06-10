@@ -36,7 +36,6 @@ async function seed() {
   const laBrea = await Series.findOne({ name: /la brea/i });
   const office = await Series.findOne({ name: /office/i });
   const modernFamily = await Series.findOne({ name: /modern family/i });
-  console.log('modernFamily', modernFamily);
 
   const generatedComments = [
     blacklist.comments.push(
