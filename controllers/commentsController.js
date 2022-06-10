@@ -33,7 +33,7 @@ async function getSeriesAndCommentAndCheck(res, req, action) {
     const comment = series.comments.id(commentId);
     if (!comment) {
       return res.status(404).send({ message: 'Comment not found' });
-    } else if (!comment.createdBy.equals(req.currentUser._id)) {
+    } else if (!comment.createdById.equals(req.currentUser._id)) {
       return res.status(401).send({ message: 'Unauthorised action' });
     } else {
       if (action === 'update') {
