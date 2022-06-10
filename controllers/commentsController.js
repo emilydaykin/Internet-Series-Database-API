@@ -11,7 +11,8 @@ const createComment = async (req, res, next) => {
     } else {
       const newComment = {
         ...req.body,
-        createdBy: req.currentUser.id
+        createdById: req.currentUser._id,
+        createdByName: req.currentUser.username
       };
       series.comments.push(newComment);
       const savedSeries = await series.save();
