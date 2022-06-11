@@ -1,4 +1,5 @@
 import Series from '../../models/series.js';
+import User from '../../models/user.js';
 import { assert } from 'chai';
 
 export default async function setUp() {
@@ -31,6 +32,11 @@ export default async function setUp() {
       comments: []
     }
   ]);
-  // done();
+
+  const users = await User.create(
+    { username: 'jo', email: 'jo@user.com', password: 'Password1!@' },
+    { username: 'abc', email: 'abc@user.com', password: 'Password1!@', isAdmin: true }
+  );
+
   assert.ok(true);
 }
