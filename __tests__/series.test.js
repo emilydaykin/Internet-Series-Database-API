@@ -66,4 +66,22 @@ describe('Testing POST series for unauthenticated users', () => {
     expect(resp.body).to.be.an('array');
     expect(resp.body.length).to.eq(0);
   });
+
+  it('Assert POST request for creating series unauthorised if not admin (if no token present)', async () => {
+    const resp = await api.post('/api/series').send({
+      name: 'White Collar',
+      genre: ['Comedy', 'Crime', 'Drama'],
+      description:
+        'A white-collar criminal agrees to help the FBI catch other white-collar criminals using his expertise as an art and securities thief, counterfeiter, and conman.',
+      actors: ['Matt Bomer', 'Tim DeKay', 'Willie Garson'],
+      pilotYear: 2009,
+      finaleYear: 2014,
+      rating: 8.3,
+      image:
+        'https://m.media-amazon.com/images/M/MV5BNDI5MDgyMTYzNF5BMl5BanBnXkFtZTcwMjAwNzk1Mw@@._V1_QL75_UY281_CR9,0,190,281_.jpg',
+      comments: []
+    });
+    expect(resp.status).to.eq(401);
+    expect(resp.body.message).to.eq('Unauthorised. No token or invalid token.');
+  });
 });
