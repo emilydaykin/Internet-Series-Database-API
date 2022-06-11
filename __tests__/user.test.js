@@ -51,18 +51,6 @@ describe('Testing User (non-admin) Authentication', () => {
 
   afterEach(() => tearDown());
 
-  // TODO
-  it('Assert user can create a review on a series', async () => {});
-
-  // TODO
-  it('Assert error when unauthenticated user tries to leave a review on a series', async () => {});
-
-  // TODO
-  it('Assert user can delete their own reviews', async () => {});
-
-  // TODO
-  it("Assert user can't delete others' reviews", async () => {});
-
   it("Assert fetching user's favourites series is successful (GET)", async () => {
     // this is essentially a request to update (PUT) the user object
     const resp = await api.get(`/api/users/${userId}`).set('Authorization', `Bearer ${userToken}`);
