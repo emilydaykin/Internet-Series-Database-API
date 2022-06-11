@@ -33,7 +33,7 @@ router
 
 router
   .route('/users')
-  .get(secureRoute, usersController.getAllUsers) // admin only
+  .get(secureRoute, usersController.getAllUsers) // only admin (can see all users) or user (id has to match user-specific token)
   .post(usersController.registerUser)
   .put(secureRoute, usersController.addUserFavourites); // logged in users only
 

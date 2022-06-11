@@ -82,7 +82,7 @@ const loginUser = async (req, res, next) => {
           isAdmin: user.isAdmin
           // faves: user.favouriteSeries
         };
-        console.log({ payload });
+        // console.log({ payload });
         const token = jwt.sign(
           payload, // payload from the token decrpyted
           secret, // the secret that only I know

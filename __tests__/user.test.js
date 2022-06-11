@@ -33,7 +33,7 @@ let userToken;
 let userId;
 let seriesId;
 
-describe('Testing Non-Admin Authentication', () => {
+describe('Testing User (non-admin) Authentication', () => {
   beforeEach(() => setUp());
   beforeEach(async () => {
     // Get user token and id:
@@ -46,11 +46,22 @@ describe('Testing Non-Admin Authentication', () => {
 
     // Get series id:
     const seriesResp = await api.get('/api/series/arrested');
-    // console.log('seriesResp', seriesResp.body[0]._id);
     seriesId = seriesResp.body[0]._id;
   });
 
   afterEach(() => tearDown());
+
+  // TODO
+  it('Assert user can create a review on a series', async () => {});
+
+  // TODO
+  it('Assert error when unauthenticated user tries to leave a review on a series', async () => {});
+
+  // TODO
+  it('Assert user can delete their own reviews', async () => {});
+
+  // TODO
+  it("Assert user can't delete others' reviews", async () => {});
 
   it("Assert fetching user's favourites series is successful (GET)", async () => {
     // this is essentially a request to update (PUT) the user object
@@ -103,4 +114,38 @@ describe('Testing Non-Admin Authentication', () => {
     expect(unFavouriting.body.favouriteSeries).to.be.an('array');
     expect(unFavouriting.body.favouriteSeries.length).to.eq(0);
   });
+});
+
+let adminToken;
+
+describe('Testing Admin Authentication', () => {
+  beforeEach(() => setUp());
+  beforeEach(async () => {
+    // Get admin token and id:
+    const resp = await api
+      .post('/api/login')
+      .send({ email: 'abc@user.com', password: 'Password1!@' });
+    adminToken = resp.body.token;
+  });
+
+  afterEach(() => tearDown());
+
+  it('Assert admins can fetch all users (GET)', async () => {
+    const resp = await api.get('/api/users').set('Authorization', `Bearer ${adminToken}`);
+    // console.log(resp);
+    expect(resp.status).to.eq(200);
+    expect(resp.body).to.be.an('array');
+    expect(resp.body.length).to.eq(2);
+  });
+
+  it('Assert error when non-admins try to fetch all users (GET)', async () => {
+    const normalUserResp = await api.get('/api/users').set('Authorization', `Bearer ${userToken}`);
+    expect(normalUserResp.status).to.eq(400);
+
+    const unauthenticatedResp = await api.get('/api/users');
+    expect(unauthenticatedResp.status).to.eq(401);
+  });
+
+  // TODO
+  it('Assert admins can add/create a new series to the catalogue (POST)', async () => {});
 });
