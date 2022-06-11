@@ -38,5 +38,23 @@ export default async function setUp() {
     { username: 'abc', email: 'abc@user.com', password: 'Password1!@', isAdmin: true }
   );
 
+  const user = await User.findOne({ username: 'jo' });
+  const arrestedDevelopment = await Series.findOne({ name: /arrested/i });
+  const inventingAnna = await Series.findOne({ name: /inventing/i });
+  arrestedDevelopment.comments.push({
+    text: 'Hmmmmmmmmm',
+    rating: 3,
+    createdById: user._id,
+    createdByName: user.username
+  });
+  inventingAnna.comments.push({
+    text: 'Hmmmmmmmmm',
+    rating: 3,
+    createdById: user._id,
+    createdByName: user.username
+  });
+  await arrestedDevelopment.save();
+  await inventingAnna.save();
+
   assert.ok(true);
 }
