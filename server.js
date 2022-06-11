@@ -25,3 +25,5 @@ async function runServer() {
 }
 
 runServer();
+
+export default app;
