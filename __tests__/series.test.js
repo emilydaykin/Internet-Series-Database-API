@@ -19,10 +19,15 @@ describe('Testing GET series for unauthenticated users', () => {
     // });
   });
 
-  it('Assert GET request returns an array of 2 series', async () => {
+  it('Assert GET request returns an array of 2 series with reviews', async () => {
     const resp = await api.get('/api/series');
     expect(resp.body).to.be.an('array');
     expect(resp.body.length).to.eq(2);
+    resp.body.forEach((series) => {
+      expect(series.comments).to.be.an('array');
+      expect(series.comments.length).to.eq(1);
+      expect(series.comments[0].createdByName).to.eq('jo');
+    });
   });
 
   it('Assert GET request returns correct results from a search parameter', async () => {
