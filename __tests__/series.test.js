@@ -2,8 +2,8 @@ import { expect } from 'chai';
 import setUp from './lib/setUp.js';
 import tearDown from './lib/tearDown.js';
 
-describe('Testing GET series', () => {
-  // Set up environemnt before each test (seed db with test data)
+describe('Testing GET series for unauthenticated users', () => {
+  // Set up environment before each test (seed db with test data)
   beforeEach(() => setUp());
 
   // clear out db after each test to keep testing environment consistent
@@ -17,5 +17,27 @@ describe('Testing GET series', () => {
     // api.get('/api/series').end((err, res) => {
     //   expect(res.status).to.eq(200);
     // });
+  });
+
+  it('Assert GET request returns an array of 2 series', async () => {
+    const resp = await api.get('/api/series');
+    expect(resp.body).to.be.an('array');
+    expect(resp.body.length).to.eq(2);
+  });
+
+  it('Assert GET request returns correct results from a search parameter', async () => {
+    // search term = 'arrested'
+    const resp = await api.get('/api/series/arrested');
+    expect(resp.status).to.eq(200);
+    expect(resp.body).to.be.an('array');
+    expect(resp.body.length).to.eq(1);
+    expect(resp.body[0].name).to.eq('Arrested Development');
+  });
+
+  it('Assert GET request returns no results if search parameter not found', async () => {
+    const resp = await api.get('/api/series/unknownSeries');
+    expect(resp.status).to.eq(200);
+    expect(resp.body).to.be.an('array');
+    expect(resp.body.length).to.eq(0);
   });
 });
