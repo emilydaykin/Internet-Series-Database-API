@@ -41,3 +41,29 @@ describe('Testing GET series for unauthenticated users', () => {
     expect(resp.body.length).to.eq(0);
   });
 });
+
+describe('Testing POST series for unauthenticated users', () => {
+  beforeEach(() => setUp());
+  afterEach(() => tearDown());
+
+  it('Assert POST request returns correct results when filtering by genre', async () => {
+    const resp = await api
+      .post('/api/series/genre/search')
+      .set('Content-type', 'application/json') // no need
+      .send({ genres: ['drama'] });
+    expect(resp.status).to.eq(200);
+    expect(resp.body).to.be.an('array');
+    expect(resp.body.length).to.eq(1);
+    expect(resp.body[0].name).to.eq('Inventing Anna');
+  });
+
+  it('Assert POST request returns no results if genre (combination) not found', async () => {
+    const resp = await api
+      .post('/api/series/genre/search')
+      .set('Content-type', 'application/json') // no need
+      .send({ genres: ['drama', 'mystery', 'thriller'] });
+    expect(resp.status).to.eq(200);
+    expect(resp.body).to.be.an('array');
+    expect(resp.body.length).to.eq(0);
+  });
+});
