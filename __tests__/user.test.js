@@ -33,7 +33,7 @@ let userToken;
 let userId;
 let seriesId;
 
-describe('Testing Non-admin Authentication', () => {
+describe('Testing Non-Admin Authentication', () => {
   beforeEach(() => setUp());
   beforeEach(async () => {
     // Get user token and id:
@@ -49,6 +49,7 @@ describe('Testing Non-admin Authentication', () => {
     // console.log('seriesResp', seriesResp.body[0]._id);
     seriesId = seriesResp.body[0]._id;
   });
+
   afterEach(() => tearDown());
 
   it("Assert fetching user's favourites series is successful (GET)", async () => {
@@ -59,12 +60,21 @@ describe('Testing Non-admin Authentication', () => {
     expect(resp.body.length).to.eq(0); // no favourites yet
   });
 
+  it("Assert error when a userId and token don't match", async () => {
+    const resp = await api
+      .get(`/api/users/62a4be404e12b72e2`)
+      .set('Authorization', `Bearer ${userToken}`);
+    expect(resp.status).to.eq(401);
+    expect(resp.body.message).to.include('Unauthorised');
+  });
+
   it("Assert adding users' favourites series is successful (PUT)", async () => {
     // this is essentially a request to update (PUT) the user object
     const resp = await api
       .put('/api/users')
       .set('Authorization', `Bearer ${userToken}`)
       .send({ seriesId: seriesId });
+    expect(resp.status).to.eq(200);
     expect(resp.body.email).to.eq('jo@user.com');
     expect(resp.body.favouriteSeries).to.be.an('array');
     expect(resp.body.favouriteSeries.length).to.eq(1);
@@ -77,6 +87,7 @@ describe('Testing Non-admin Authentication', () => {
       .put('/api/users')
       .set('Authorization', `Bearer ${userToken}`)
       .send({ seriesId: seriesId });
+    expect(favouriting.status).to.eq(200);
     expect(favouriting.body.email).to.eq('jo@user.com');
     expect(favouriting.body.favouriteSeries).to.be.an('array');
     expect(favouriting.body.favouriteSeries.length).to.eq(1);
@@ -87,6 +98,7 @@ describe('Testing Non-admin Authentication', () => {
       .put('/api/users')
       .set('Authorization', `Bearer ${userToken}`)
       .send({ seriesId: seriesId });
+    expect(unFavouriting.status).to.eq(200);
     expect(unFavouriting.body.email).to.eq('jo@user.com');
     expect(unFavouriting.body.favouriteSeries).to.be.an('array');
     expect(unFavouriting.body.favouriteSeries.length).to.eq(0);
