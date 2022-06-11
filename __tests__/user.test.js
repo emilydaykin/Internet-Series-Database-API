@@ -33,7 +33,7 @@ let userToken;
 let userId;
 let seriesId;
 
-describe('Testing User (non-admin) Authentication', () => {
+describe('Testing User (non-admin) Authentication (Favourites)', () => {
   beforeEach(() => setUp());
   beforeEach(async () => {
     // Get user token and id:
@@ -59,7 +59,7 @@ describe('Testing User (non-admin) Authentication', () => {
     expect(resp.body.length).to.eq(0); // no favourites yet
   });
 
-  it("Assert error when a userId and token don't match", async () => {
+  it("Assert error when a userId and token don't match when fetching favoutites", async () => {
     const resp = await api
       .get(`/api/users/62a4be404e12b72e2`)
       .set('Authorization', `Bearer ${userToken}`);
