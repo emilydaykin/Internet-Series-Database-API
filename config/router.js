@@ -29,7 +29,7 @@ router
   .post(secureRoute, commentsController.updateComment)
   .delete(secureRoute, commentsController.deleteComment);
 
-router.route('/series/:name').delete(seriesController.deleteSeries);
+// router.route('/series/:name').delete(seriesController.deleteSeries);
 
 router
   .route('/users')

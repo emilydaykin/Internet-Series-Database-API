@@ -4,7 +4,7 @@
   "description": "my very own TV series API!",
   "main": "server.js",
   "scripts": {
-    "test": "mocha __tests__/*_test.js --require __tests__/helper.js --recursive --exit",
+    "test": "mocha __tests__/*.test.js --require __tests__/helper.js --recursive --exit",
     "start:server": "npx nodemon server.js",
     "seed": "node --experimental-json-modules db/seed.js"
   },
