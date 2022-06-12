@@ -78,7 +78,7 @@ const filterSeriesByGenre = async (req, res, next) => {
 const createSeries = async (req, res, next) => {
   if (req.currentUser.isAdmin) {
     try {
-      console.log('req.body', req.body);
+      // console.log('req.body', req.body);
       const newSeries = await Series.create(req.body);
       return res.status(201).json({ message: 'Created new series!', body: newSeries });
     } catch (err) {

@@ -4,6 +4,21 @@ import tearDown from './lib/tearDown.js';
 import jwt from 'jsonwebtoken';
 import { secret } from '../config/environment.js';
 
+const mockSeries = {
+  name: 'Without a Trace',
+  genre: ['Crime', 'Drama', 'Mystery'],
+  description:
+    'Series about the special FBI Missing Persons Squad that finds missing people by applying advanced psychological profiling to reveal the victims lives.',
+  actors: ['Anthony LaPaglia', 'Poppy Montgomery', 'Enrique Murciano'],
+  pilotYear: '2002',
+  finaleYear: '2009',
+  rating: '7.0',
+  image:
+    'https://m.media-amazon.com/images/M/MV5BZjRlNzQyN2MtMWNlYi00YTA3LTlkMGItNTY2OWZkNTkwNDgyXkEyXkFqcGdeQXVyNjc3MjQzNTI@._V1_QL75_UY281_CR11,0,190,281_.jpg',
+  episodes: '160',
+  language: 'CBS (United States)'
+};
+
 describe('Testing REGISTER and LOG IN', () => {
   beforeEach(() => setUp());
   afterEach(() => tearDown());
@@ -64,7 +79,7 @@ describe('Testing User (non-admin) Authentication (Favourites)', () => {
       .get(`/api/users/62a4be404e12b72e2`)
       .set('Authorization', `Bearer ${userToken}`);
     expect(resp.status).to.eq(401);
-    expect(resp.body.message).to.include('Unauthorised');
+    expect(resp.body.message).to.deep.include('Unauthorised'); // always use _deep_ include
   });
 
   it("Assert adding users' favourites series is successful (PUT)", async () => {
@@ -109,11 +124,17 @@ let adminToken;
 describe('Testing Admin Authentication', () => {
   beforeEach(() => setUp());
   beforeEach(async () => {
-    // Get admin token and id:
-    const resp = await api
+    // Get admin token:
+    const adminResp = await api
       .post('/api/login')
       .send({ email: 'abc@user.com', password: 'Password1!@' });
-    adminToken = resp.body.token;
+    adminToken = adminResp.body.token;
+
+    // Get user token:
+    const userResp = await api
+      .post('/api/login')
+      .send({ email: 'jo@user.com', password: 'Password1!@' });
+    userToken = userResp.body.token;
   });
 
   afterEach(() => tearDown());
@@ -128,12 +149,53 @@ describe('Testing Admin Authentication', () => {
 
   it('Assert error when non-admins try to fetch all users (GET)', async () => {
     const normalUserResp = await api.get('/api/users').set('Authorization', `Bearer ${userToken}`);
-    expect(normalUserResp.status).to.eq(400);
+    expect(normalUserResp.status).to.eq(401);
 
     const unauthenticatedResp = await api.get('/api/users');
     expect(unauthenticatedResp.status).to.eq(401);
   });
 
-  // TODO
-  it('Assert admins can add/create a new series to the catalogue (POST)', async () => {});
+  it('Assert admins can create/add a new series to the catalogue (POST & GET)', async () => {
+    const postResp = await api
+      .post('/api/series')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send(mockSeries);
+    expect(postResp.status).to.eq(201);
+
+    // Check it's really there:
+    const getResp = await api.get('/api/series/without a trace');
+    expect(getResp.status).to.eq(200);
+    expect(getResp.body).to.be.an('array');
+    expect(getResp.body.length).to.eq(1);
+    expect(getResp.body[0].genre).to.deep.include.members(['Crime', 'Drama', 'Mystery']);
+  });
+
+  it("Assert users can't create/add a new series to the catalogue (POST)", async () => {
+    const resp = await api
+      .post('/api/series')
+      .set('Authorization', `Bearer ${userToken}`)
+      .send(mockSeries);
+
+    expect(resp.status).to.eq(401);
+    expect(resp.body.message).to.deep.include(
+      'Unauthorised: you must be an admin to create a series'
+    );
+  });
+
+  it('Assert wrong token error message when creating/adding a new series to the catalogue (POST)', async () => {
+    const resp = await api
+      .post('/api/series')
+      .set('Authorization', `Bearer dfg6546df4g5sd4fg5er54erg6`)
+      .send(mockSeries);
+
+    expect(resp.status).to.eq(400);
+    expect(resp.body.message).to.deep.include('Unauthorised. Token not verified.');
+  });
+
+  it("Assert unauthenticated users can't create/add a new series to the catalogue (POST)", async () => {
+    const resp = await api.post('/api/series').send(mockSeries);
+
+    expect(resp.status).to.eq(401);
+    expect(resp.body.message).to.deep.include('Unauthorised. No token or invalid token.');
+  });
 });
