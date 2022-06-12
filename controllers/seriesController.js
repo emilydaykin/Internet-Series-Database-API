@@ -27,7 +27,7 @@ const getSeriesBySearchTerm = async (req, res, next) => {
       return res.status(200).json(seriesById);
     } else if (parseFloat(req.params.search)) {
       const searchTermToFloat = parseFloat(req.params.search);
-      console.log('searchTermToFloat', searchTermToFloat);
+      // console.log('searchTermToFloat', searchTermToFloat);
       const seriesByYearOrRating = allSeries.filter(
         (show) =>
           show.pilotYear === searchTermToFloat ||
@@ -35,7 +35,7 @@ const getSeriesBySearchTerm = async (req, res, next) => {
           show.rating === searchTermToFloat
       );
 
-      console.log('seriesByYearOrRating', seriesByYearOrRating);
+      // console.log('seriesByYearOrRating', seriesByYearOrRating);
       return res.status(200).json(seriesByYearOrRating);
     } else {
       const searchTermLowerCase = req.params.search.toLowerCase();

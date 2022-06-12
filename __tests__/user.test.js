@@ -34,6 +34,27 @@ describe('Testing REGISTER and LOG IN', () => {
     expect(resp.status).to.eq(201);
   });
 
+  it('Assert error raised with incorrect register (POST)', async () => {
+    const resp = await api.post('/api/users').send({
+      username: 'jesse',
+      email: 'jesse@user.com',
+      password: 'SecretPw1!',
+      passwordConfirmation: 'DifferentSecretPw!1'
+    });
+
+    expect(resp.status).to.eq(400);
+    expect(resp.body.message).to.eq("Passwords don't match.");
+
+    const anotherResp = await api.post('/api/users').send({
+      username: 'jesse',
+      password: 'SecretPw135&',
+      passwordConfirmation: 'SecretPw135&'
+    });
+
+    expect(anotherResp.status).to.eq(500);
+    expect(anotherResp.text).to.deep.include('User email required');
+  });
+
   it('Assert login by a registered user is successful (POST)', async () => {
     const resp = await api.post('/api/login').send({
       email: 'jo@user.com',
@@ -41,6 +62,16 @@ describe('Testing REGISTER and LOG IN', () => {
     });
 
     expect(resp.status).to.eq(202);
+  });
+
+  it('Assert login by an un-registered user throws an error (POST)', async () => {
+    const resp = await api.post('/api/login').send({
+      email: 'unknown@user.com',
+      password: 'Password1!@'
+    });
+
+    expect(resp.status).to.eq(404);
+    expect(resp.body.message).to.deep.include('Unauthorised');
   });
 });
 
