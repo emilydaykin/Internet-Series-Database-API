@@ -9,6 +9,7 @@ import jwt from 'jsonwebtoken';
 import { secret } from '../config/environment.js';
 
 let userToken;
+let anotherUserToken;
 let userId;
 let seriesId;
 
@@ -21,13 +22,19 @@ const mockComment = {
 describe('Testing COMMENTS', () => {
   beforeEach(() => setUp());
   beforeEach(async () => {
-    // Get a user token:
+    // Get a user token (the one who's written comments):
     const resp = await api
       .post('/api/login')
       .send({ email: 'jo@user.com', password: 'Password1!@' });
     userToken = resp.body.token;
     const jwtDecoded = jwt.verify(userToken, secret);
     userId = jwtDecoded.userId;
+
+    // Get another user's token (who's written no comments):
+    const secondResp = await api
+      .post('/api/login')
+      .send({ email: 'nacho@user.com', password: 'Password1!@' });
+    anotherUserToken = secondResp.body.token;
 
     // Get a series id:
     const seriesResp = await api.get('/api/series/arrested');
@@ -50,18 +57,47 @@ describe('Testing COMMENTS', () => {
     expect(comments).to.be.an('array');
     expect(comments.length).to.eq(2);
     const targetComment = comments.find((comment) => comment.text === 'Not bad');
-    console.log('targetComment', targetComment);
     expect(targetComment.rating).to.eq(4);
     expect(targetComment.createdById).to.eq(userId);
     expect(targetComment.createdByName).to.eq('jo');
   });
 
-  // TODO
-  // it('Assert error when unauthenticated user tries to leave a review on a series', async () => {});
+  it('Assert error when unauthenticated user tries to leave a review on a series', async () => {
+    const resp = await api.post(`/api/series/${seriesId}/comments`).send(mockComment);
+    expect(resp.status).to.eq(401);
+    expect(resp.body.message).to.deep.include('Unauthorised. No token or invalid token.');
+  });
 
-  // TODO
-  // it('Assert user can delete their own reviews', async () => {});
+  it('Assert user can delete their own reviews', async () => {
+    // Get comment id to delete:
+    const getResp = await api.get('/api/series/arrested');
+    const commentsInitial = getResp.body[0].comments;
+    expect(commentsInitial[0].createdById).to.eq(userId);
+    const commentId = commentsInitial[0]._id;
 
-  // TODO
-  // it("Assert user can't delete others' reviews", async () => {});
+    const delResp = await api
+      .delete(`/api/series/${seriesId}/comments/${commentId}`)
+      .set('Authorization', `Bearer ${userToken}`);
+    expect(delResp.status).to.eq(200);
+    expect(delResp.body.comments.length).to.eq(0);
+
+    const getRespAfterDelete = await api.get('/api/series/arrested');
+    const commentsAfterDelete = getRespAfterDelete.body[0].comments;
+    expect(commentsAfterDelete.length).to.eq(0);
+  });
+
+  it("Assert user can't delete others' reviews", async () => {
+    // Get comment id to delete (written by Jo):
+    const getResp = await api.get('/api/series/arrested');
+    const commentsInitial = getResp.body[0].comments;
+    expect(commentsInitial[0].createdById).to.eq(userId);
+    const commentId = commentsInitial[0]._id;
+
+    // Nacho tries to delete Jo's comment
+    const delResp = await api
+      .delete(`/api/series/${seriesId}/comments/${commentId}`)
+      .set('Authorization', `Bearer ${anotherUserToken}`);
+    expect(delResp.status).to.eq(401);
+    expect(delResp.body.message).to.deep.include('Unauthorised');
+  });
 });
