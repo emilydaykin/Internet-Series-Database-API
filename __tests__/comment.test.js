@@ -42,7 +42,7 @@ describe('Testing COMMENTS', () => {
   });
   afterEach(() => tearDown());
 
-  it('Assert user can create a review on a series (POST)', async () => {
+  it('Assert user can create a review on a series (POST & GET)', async () => {
     const resp = await api
       .post(`/api/series/${seriesId}/comments`)
       .set('Authorization', `Bearer ${userToken}`)
@@ -62,13 +62,13 @@ describe('Testing COMMENTS', () => {
     expect(targetComment.createdByName).to.eq('jo');
   });
 
-  it('Assert error when unauthenticated user tries to leave a review on a series', async () => {
+  it('Assert error when unauthenticated user tries to leave a review on a series (POST)', async () => {
     const resp = await api.post(`/api/series/${seriesId}/comments`).send(mockComment);
     expect(resp.status).to.eq(401);
     expect(resp.body.message).to.deep.include('Unauthorised. No token or invalid token.');
   });
 
-  it('Assert user can delete their own reviews', async () => {
+  it('Assert user can delete their own reviews (DEL & GET)', async () => {
     // Get comment id to delete:
     const getResp = await api.get('/api/series/arrested');
     const commentsInitial = getResp.body[0].comments;
@@ -86,7 +86,7 @@ describe('Testing COMMENTS', () => {
     expect(commentsAfterDelete.length).to.eq(0);
   });
 
-  it("Assert user can't delete others' reviews", async () => {
+  it("Assert user can't delete others' reviews (DEL & GET)", async () => {
     // Get comment id to delete (written by Jo):
     const getResp = await api.get('/api/series/arrested');
     const commentsInitial = getResp.body[0].comments;
