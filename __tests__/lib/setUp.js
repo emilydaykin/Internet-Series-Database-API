@@ -35,6 +35,7 @@ export default async function setUp() {
 
   await User.create(
     { username: 'jo', email: 'jo@user.com', password: 'Password1!@' },
+    { username: 'nacho', email: 'nacho@user.com', password: 'Password1!@' },
     { username: 'abc', email: 'abc@user.com', password: 'Password1!@', isAdmin: true }
   );
 

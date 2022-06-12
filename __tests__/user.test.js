@@ -144,7 +144,7 @@ describe('Testing Admin Authentication', () => {
     // console.log(resp);
     expect(resp.status).to.eq(200);
     expect(resp.body).to.be.an('array');
-    expect(resp.body.length).to.eq(2);
+    expect(resp.body.length).to.eq(3);
   });
 
   it('Assert error when non-admins try to fetch all users (GET)', async () => {
