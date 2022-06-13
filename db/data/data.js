@@ -1,4 +1,4 @@
-import data from './series.json' assert { type: 'json' };
+import data from './series.json' assert { type: 'json' }; // for heroku
 const series = JSON.parse(data);
 
 const createUser = (username, email, password, isAdmin = false) => {
