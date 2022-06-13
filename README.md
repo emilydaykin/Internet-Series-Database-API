@@ -60,8 +60,8 @@
     - Email: `sierra@user.com`
     - Password: `Password1!@`
 - Or run and test locally:
-  - **Back End**: Clone the [backend repo](https://github.com/emilydaykin/Internet-Series-Database-API) &rarr; Run MongoDB locally &rarr; `npm i` &rarr; `npm run test` (25 tests across 6 test suites) &rarr; `npm run start:server`
-  - **Front End**: Clone this repo &rarr; `npm i` &rarr; `npm run test` (31 tests across 6 test suites) &rarr; `npm run start:client`
+  - **Back End**: Clone this repo &rarr; Run MongoDB locally &rarr; `npm i` &rarr; `npm run test` (25 tests across 6 test suites) &rarr; `npm run start:server`
+  - **Front End**: Clone the [frontend repo](https://github.com/emilydaykin/Internet-Series-Database-Client) &rarr; `npm i` &rarr; `npm run test` (31 tests across 6 test suites) &rarr; `npm run start:client`
 
 # Tech Stack
 - Front End: React.js SPA, React-Router-Dom,  Sass (BEM)
