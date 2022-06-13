@@ -1,4 +1,4 @@
-import data from './series.json';
+import data from './series.json' assert { type: 'json' };
 const series = JSON.parse(data);
 
 const createUser = (username, email, password, isAdmin = false) => {
