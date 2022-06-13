@@ -6,7 +6,8 @@
   "scripts": {
     "test": "mocha __tests__/*.test.js --require __tests__/helper.js --recursive --exit",
     "start:server": "npx nodemon server.js",
-    "seed": "node --experimental-json-modules db/seed.js"
+    "seed": "node --experimental-json-modules db/seed.js",
+    "start": "node server.js"
   },
   "type": "module",
   "author": "",
