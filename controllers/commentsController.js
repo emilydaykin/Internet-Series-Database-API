@@ -1,9 +1,7 @@
 import Series from '../models/series.js';
 
 const createComment = async (req, res, next) => {
-  // This won't work until secureRoute is set up!!!
-  // console.log('req current user:', req.currentUser);
-
+  // This won't work until secureRoute is set up
   try {
     const series = await Series.findById(req.params.id);
     if (!series) {

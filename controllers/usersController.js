@@ -18,7 +18,6 @@ const getAllUsers = async (req, res, next) => {
 
 // Create new user
 const registerUser = async (req, res, next) => {
-  // console.log('req.body', req.body);
   try {
     if (req.body.password === req.body.passwordConfirmation) {
       delete req.body.passwordConfirmation;
@@ -33,7 +32,6 @@ const registerUser = async (req, res, next) => {
   } catch (err) {
     if (err.message.includes('User validation failed: password: Password')) {
       const errorMessage = err.message.split('password: ')[1];
-      console.log('------errorMessage:', errorMessage);
       return res.status(400).json({
         status: 'failure',
         message: errorMessage
@@ -80,9 +78,7 @@ const loginUser = async (req, res, next) => {
           userId: user._id,
           userName: user.username,
           isAdmin: user.isAdmin
-          // faves: user.favouriteSeries
         };
-        // console.log({ payload });
         const token = jwt.sign(
           payload, // payload from the token decrpyted
           secret, // the secret that only I know
@@ -99,8 +95,6 @@ const loginUser = async (req, res, next) => {
 
 const addUserFavourites = async (req, res, next) => {
   try {
-    // console.log('req.body.seriesId', req.body.seriesId);
-    // console.log('req.params', req.params);
     // Get user via token
     if (!req.currentUser) {
       res
@@ -108,13 +102,10 @@ const addUserFavourites = async (req, res, next) => {
         .json({ message: "Unauthorised. You must be logged in to 'favourite' a series" });
     } else {
       // Get series (that they clicked on):
-      // console.log('req.currentUser------:', req.currentUser);
       const series = await Series.findById(req.body.seriesId);
-      // console.log('series clicked on', series.name);
       const userFavouritedAlready = !!req.currentUser.favouriteSeries.find(
         (item) => item._id.toString() === req.body.seriesId
       );
-      // console.log('userFavouritedAlready:', userFavouritedAlready);
       if (userFavouritedAlready) {
         // remove from favourites list if already in list
         await User.updateOne({ _id: req.currentUser._id }, { $pull: { favouriteSeries: series } });
@@ -132,9 +123,6 @@ const addUserFavourites = async (req, res, next) => {
 
 const getUserFavourites = async (req, res, next) => {
   try {
-    // console.log('req.params', req.params);
-    // console.log('req.currentUser._id', req.currentUser._id.toString());
-    // console.log('req.currentUser', req.currentUser);
     if (req.params.id === req.currentUser._id.toString() || req.currentUser.isAdmin) {
       const user = await User.findById(req.params.id);
       if (!user) {
@@ -142,7 +130,6 @@ const getUserFavourites = async (req, res, next) => {
           .status(400)
           .json({ status: 'failure', message: `No user found with if ${req.params.id}` });
       } else {
-        // console.log('user', user);
         res.status(200).json(user.favouriteSeries);
       }
     } else {
